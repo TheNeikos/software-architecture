@@ -45,16 +45,29 @@ class Laeufer {
     private String      email;
     private String      sms;
     private Adresse     addr;
-    public Laeufer Laeufer(LaeuferDTO param0) {
-        return null;
+    public Laeufer(LaeuferDTO dto)
+    {
+        this.name                   = dto.getName();
+        this.vorname                = dto.getVorname();
+        this.geschlecht             = dto.getGeschlecht();
+        this.geburtsjahr            = dto.getGeburtsjahr();
+        this.email                  = dto.getEmail();
+        this.sms                    = dto.getSms();
+        this.addr                   = new Address(
+                dto.getStrasse(),
+                dto.getPlz(),
+                dto.getOrt(),
+                dto.getLand()
+                );
     }
     public String getName() {
-        return null;
+        return name;
     }
     public String getVorname() {
-        return null;
+        return vorname;
     }
-    public void setVereinszugehoerigkeit(String param0) {
+    public void setVereinszugehoerigkeit(String v) {
+        this.vereinszugehoerigkeit = v;
     }
     public Laufergebnis[] getLaufergebnisse() {
         return null;
@@ -66,25 +79,50 @@ class Laeufer {
         return null;
     }
     public LaeuferDTO toDTO() {
-        return null;
+        return new LaeuferDTO(this.name,
+            this.vorname,
+            this.geschlecht,
+            this.geburtsjahr,
+            this.email,
+            this.sms,
+            this.addr.getStrasse(),
+            this.addr.getPlz(),
+            this.addr.getOrt(),
+            this.land.getLand()
+        );
     }
 }
 
 class Verein {
     private String name;
     private Adresse addr;
-    public Verein Verein(VereinDTO param0) {
-        return null;
+    private Laeufer[] lauefer;
+
+    public Verein(VereinDTO dto) {
+        this.name = dto.getName();
+        this.addr = new Address(
+            dto.getStrasse(),
+            dto.getPlz(),
+            dto.getOrt(),
+            dto.getLand()
+        );
     }
-    public void addLaeufer(Laeufer param0) {
+    public void addLaeufer(Laeufer l) {
+        l.setVereinszugehoerigket(this.name);
     }
 }
 
 class Anmeldung {
     private Boolean bezahlt;
     private Integer startnummer;
-    public Anmeldung Anmeldung(AnmeldungDTO param0) {
-        return null;
+    private Verein verein;
+
+    public Anmeldung(AnmeldungDTO dto) {
+		this.laeufer = Laeufer(dt.getLaeufer());
+		this.bezahlt = dto.getBezahlt;
+		this.veranstaltung = dto.getVeranstaltung;
+		this.verein = dto.getVerein;
+		this.startnummer = dto.getStartnummer;
     }
 }
 
@@ -94,12 +132,12 @@ class Laufveranstaltung {
     private Date anmeldeschluss;
     private Integer startgebuehr;
     private float distanz;
-    public Laufveranstaltung Laufveranstaltung(VeranstaltungDTO param0) {
+    public Laufveranstaltung(VeranstaltungDTO dto) {
         return null;
     }
-    public void anmelden(Laeufer param0) {
+    public void anmelden(Laeufer lauf) {
     }
-    public void disqualifizieren(Laeufer param0) {
+    public void disqualifizieren(Laeufer lauf) {
     }
     public Laufergebnis[] ergebnislisteErstellen() {
         return null;
@@ -107,7 +145,7 @@ class Laufveranstaltung {
     public Laeufer[] listLaeufer() {
         return null;
     }
-    public void anmeldungZurueckziehen(Laeufer param0) {
+    public void anmeldungZurueckziehen(Laeufer lauf) {
     }
     public Laeufer[] erstelleAufgegebenenListe() {
         return null;
@@ -118,7 +156,7 @@ class Laufzeit {
     private Integer startnummer;
     private Date laufzeit;
     private String veranstaltung;
-    public void Laufzeit(LaufzeitDTO param0) {
+    public Laufzeit(LaufzeitDTO dto) {
     }
 }
 
@@ -131,31 +169,31 @@ class Listeneintrag {
     private Integer startnummer;
     private Integer platzierung;
     private Date laufzeit;
-    public void Listeneintrag(ListeneintragDTO param0) {
+    public Listeneintrag(ListeneintragDTO dto) {
     }
 }
 
 class Laufergebnis {
     private Date endzeit;
     private Date zwischenzeit;
-    public void Laufergebnis(Date param0,Date param1) {
+    public Laufergebnis(Date anfag, Date ende) {
     }
-    public void setEndzeit(Date param0) {
+    public void setEndzeit(Date ende) {
     }
-    public void setZwischenzeit(Date param0) {
+    public void setZwischenzeit(Date zwischenzeit) {
     }
     public void SMSsenden() {
     }
 }
 
 class Bank {
-    public Boolean hatUeberwiesen(Laufveranstaltung param0,Laeufer param1) {
+    public Boolean hatUeberwiesen(Laufveranstaltung ver,Laeufer lauf) {
         return null;
     }
 }
 
 class Zeitmesssystem {
-    public Laufergebnis gibZeitLaeufer(Laeufer param0) {
+    public Laufergebnis gibZeitLaeufer(Laeufer lauf) {
         return null;
     }
 }
