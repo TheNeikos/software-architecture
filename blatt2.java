@@ -2,16 +2,12 @@
 import swa.runningeasy.dtos.*;
 import java.util.Date;
 
-enum Geschlecht {
-    Maennlich, Weiblich
-}
-
 class Adresse {
-    private String strasse;
-    private String plz;
-    private String ort;
-    private String land;
-    public void Adresse(
+    public String strasse;
+    public String plz;
+    public String ort;
+    public String land;
+    public Adresse(
             String strasse,
             String plz,
             String ort,
@@ -37,14 +33,14 @@ class Adresse {
 }
 
 class Laeufer {
-    private String      name;
-    private String      vorname;
-    private Geschlecht  geschlecht;
-    private Integer     geburtsjahr;
-    private String      vereinszugehoerigkeit;
-    private String      email;
-    private String      sms;
-    private Adresse     addr;
+    public String      name;
+    public String      vorname;
+    public char        geschlecht;
+    public Integer     geburtsjahr;
+    public Verein      vereinszugehoerigkeit;
+    public String      email;
+    public String      sms;
+    public Adresse     addr;
     public Laeufer(LaeuferDTO dto)
     {
         this.name                   = dto.getName();
@@ -53,7 +49,7 @@ class Laeufer {
         this.geburtsjahr            = dto.getGeburtsjahr();
         this.email                  = dto.getEmail();
         this.sms                    = dto.getSms();
-        this.addr                   = new Address(
+        this.addr                   = new Adresse(
                 dto.getStrasse(),
                 dto.getPlz(),
                 dto.getOrt(),
@@ -66,41 +62,41 @@ class Laeufer {
     public String getVorname() {
         return vorname;
     }
-    public void setVereinszugehoerigkeit(String v) {
+    public void setVereinszugehoerigkeit(Verein v) {
         this.vereinszugehoerigkeit = v;
     }
-    public Laufergebnis[] getLaufergebnisse() {
+    public Listeneintrag[] getListeneintraege() {
         return null;
     }
     public Laeufer[] erstelleStartliste() {
         return null;
     }
-    public Laufergebnis[] erstelleErgebnisliste() {
+    public Listeneintrag[] erstelleErgebnisliste() {
         return null;
     }
     public LaeuferDTO toDTO() {
         return new LaeuferDTO(this.name,
             this.vorname,
-            this.geschlecht,
             this.geburtsjahr,
+            this.geschlecht,
             this.email,
             this.sms,
             this.addr.getStrasse(),
             this.addr.getPlz(),
             this.addr.getOrt(),
-            this.land.getLand()
+            this.addr.getLand()
         );
     }
 }
 
 class Verein {
-    private String name;
-    private Adresse addr;
-    private Laeufer[] lauefer;
+    public String name;
+    public Adresse addr;
+    public Laeufer[] lauefer;
 
     public Verein(VereinDTO dto) {
         this.name = dto.getName();
-        this.addr = new Address(
+        this.addr = new Adresse(
             dto.getStrasse(),
             dto.getPlz(),
             dto.getOrt(),
@@ -108,38 +104,45 @@ class Verein {
         );
     }
     public void addLaeufer(Laeufer l) {
-        l.setVereinszugehoerigket(this.name);
+        l.setVereinszugehoerigkeit(this);
     }
 }
 
 class Anmeldung {
-    private Boolean bezahlt;
-    private Integer startnummer;
-    private Verein verein;
+    public Boolean bezahlt;
+    public Integer startnummer;
+    public Verein verein;
+    public Laeufer laeufer;
 
     public Anmeldung(AnmeldungDTO dto) {
-		this.laeufer = Laeufer(dt.getLaeufer());
-		this.bezahlt = dto.getBezahlt;
-		this.veranstaltung = dto.getVeranstaltung;
-		this.verein = dto.getVerein;
-		this.startnummer = dto.getStartnummer;
+		this.laeufer       = new Laeufer(dto.getLaeufer());
+		this.bezahlt       = dto.getBezahlt();
+		this.veranstaltung = dto.getVeranstaltung();
+		this.verein        = new Verein(dto.getVerein());
+		this.startnummer   = dto.getStartnummer();
     }
 }
 
 class Laufveranstaltung {
-    private String name;
-    private Date datum;
-    private Date anmeldeschluss;
-    private Integer startgebuehr;
-    private float distanz;
+    public String name;
+    public Date datum;
+    public Date anmeldeschluss;
+    public Integer startgebuehr;
+    public float distanz;
+    public Listeneintrag[] eintraege;
     public Laufveranstaltung(VeranstaltungDTO dto) {
-        return null;
+        this.name           = dto.getName();
+        this.datum          = dto.getDatum();
+        this.anmeldeschluss = dto.getAnmeldeschluss();
+        this.startgebuehr   = dto.getStartgebuehr();
+        this.distanz        = dto.getDistanz();
     }
     public void anmelden(Laeufer lauf) {
+        this.eintraege.add(new Listeneintrag(lauf, this));
     }
     public void disqualifizieren(Laeufer lauf) {
     }
-    public Laufergebnis[] ergebnislisteErstellen() {
+    public Listeneintrag[] ergebnislisteErstellen() {
         return null;
     }
     public Laeufer[] listLaeufer() {
@@ -153,36 +156,42 @@ class Laufveranstaltung {
 }
 
 class Laufzeit {
-    private Integer startnummer;
-    private Date laufzeit;
-    private String veranstaltung;
+    public Integer startnummer;
+    public Date laufzeit;
+    public String veranstaltung;
     public Laufzeit(LaufzeitDTO dto) {
+		this.startnummer    = dto.getStartnummer();
+		this.laufzeit       = dto.getLaufzeit();
+		this.veranstaltung  = dto.getVeranstaltung();
     }
 }
 
 class Listeneintrag {
-    private String name;
-    private String vorname;
-    private Integer geburtsjahr;
-    private char geschlecht;
-    private String verein;
-    private Integer startnummer;
-    private Integer platzierung;
-    private Date laufzeit;
-    public Listeneintrag(ListeneintragDTO dto) {
-    }
-}
+    public String name;
+    public String vorname;
+    public Integer geburtsjahr;
+    public char geschlecht;
+    public String verein;
+    public Integer startnummer;
+    public Integer platzierung;
+    public Date laufzeit;
+    public Laeufer laeufer;
+    public Laufveranstaltung veranstaltung;
 
-class Laufergebnis {
-    private Date endzeit;
-    private Date zwischenzeit;
-    public Laufergebnis(Date anfag, Date ende) {
+    public Listeneintrag(Laeufer lauf, Laufveranstaltung ver) {
+        this.laeufer = lauf;
+        this.veranstaltung = ver;
     }
-    public void setEndzeit(Date ende) {
-    }
-    public void setZwischenzeit(Date zwischenzeit) {
-    }
-    public void SMSsenden() {
+
+    public Listeneintrag(ListeneintragDTO dto) {
+		this.name           = dto.getName();
+		this.vorname        = dto.getVorname();
+		this.geburtsjahr    = dto.getGeburtsjahr();
+		this.geschlecht     = dto.getGeschlecht();
+		this.verein         = dto.getVerein();
+		this.startnummer    = dto.getStartnummer();
+		this.platzierung    = dto.getPlatzierung();
+		this.laufzeit       = dto.getLaufzeit();
     }
 }
 
@@ -193,9 +202,12 @@ class Bank {
 }
 
 class Zeitmesssystem {
-    public Laufergebnis gibZeitLaeufer(Laeufer lauf) {
+    public Date gibZeit(Laeufer lauf) {
         return null;
     }
 }
+
+
+
 
 
